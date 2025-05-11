@@ -116,7 +116,9 @@ public class UserInterface {
         double price = Double.parseDouble(scanner.nextLine());
 
         dealership.addVehicle(new Vehicle(vin, year, make, model, type, color, mileage, price));
-        new DealershipFileManager().saveDealership(dealership);
+        DealershipFileManager fileManager = new DealershipFileManager();
+        fileManager.saveDealership(dealership);
+
         System.out.println("Vehicle added!");
     }
 
@@ -134,7 +136,9 @@ public class UserInterface {
 
         if (match != null) {
             dealership.removeVehicle(match);
-            new DealershipFileManager().saveDealership(dealership);
+            DealershipFileManager fileManager = new DealershipFileManager();
+            fileManager.saveDealership(dealership);
+
             System.out.println("Vehicle removed!");
         } else {
             System.out.println("Vehicle not found.");

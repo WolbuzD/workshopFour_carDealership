@@ -1,4 +1,3 @@
-// --- DealershipFileManager.java ---
 package com.ps;
 
 import java.io.*;
@@ -7,7 +6,9 @@ public class DealershipFileManager {
     private static final String FILE_NAME = "inventory.csv";
 
     public Dealership getDealership() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(FILE_NAME));
             String[] header = reader.readLine().split("\\|");
             Dealership dealership = new Dealership(header[0], header[1], header[2]);
 
@@ -29,11 +30,21 @@ public class DealershipFileManager {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public void saveDealership(Dealership dealership) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME))) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(new FileWriter(FILE_NAME));
             writer.println(String.join("|", dealership.getName(), dealership.getAddress(), dealership.getPhone()));
             for (Vehicle v : dealership.getAllVehicles()) {
                 writer.printf("%d|%d|%s|%s|%s|%s|%d|%.2f\n",
@@ -42,6 +53,10 @@ public class DealershipFileManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                writer.close(); // PrintWriter’s close() does not throw, but good practice
+            }
         }
     }
 }

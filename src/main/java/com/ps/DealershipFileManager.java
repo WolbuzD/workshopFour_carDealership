@@ -30,33 +30,32 @@ public class DealershipFileManager {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
     public void saveDealership(Dealership dealership) {
-        PrintWriter writer = null;
+        FileWriter writer = null;
         try {
-            writer = new PrintWriter(new FileWriter(FILE_NAME));
-            writer.println(String.join("|", dealership.getName(), dealership.getAddress(), dealership.getPhone()));
+            writer = new FileWriter(FILE_NAME);
+
+            // Write dealership info (first line)
+            writer.write(dealership.getName() + "|" + dealership.getAddress() + "|" + dealership.getPhone() + "\n");
+
+            // Write each vehicle
             for (Vehicle v : dealership.getAllVehicles()) {
-                writer.printf("%d|%d|%s|%s|%s|%s|%d|%.2f\n",
-                        v.getVin(), v.getYear(), v.getMake(), v.getModel(), v.getVehicleType(),
-                        v.getColor(), v.getOdometer(), v.getPrice());
+                writer.write(v.getVin() + "|" +
+                        v.getYear() + "|" +
+                        v.getMake() + "|" +
+                        v.getModel() + "|" +
+                        v.getVehicleType() + "|" +
+                        v.getColor() + "|" +
+                        v.getOdometer() + "|" +
+                        String.format("%.2f", v.getPrice()) + "\n");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                writer.close(); // PrintWriter’s close() does not throw, but good practice
-            }
         }
     }
+
 }
